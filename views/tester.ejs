@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><%= title %></title>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script>
+$(document).ready(function(){
+  $("#postButton").click(function(){
+      var myobj = {session:$("#session").val(),move: {column:parseInt($("#column").val()), player:parseInt($("#player").val())}};
+      jobj = JSON.stringify(myobj);
+      $("#json").text(jobj);
+      var url = "board";
+      $.ajax({
+          url: url,
+          type: "POST",
+          data: jobj,
+          contentType: "application/json; charset=utf-8",
+          success: function(data,textStatus) {
+              $("#done").html(textStatus);
+          }
+      })
+  });
+  $("#getButton").click(function() {
+    console.log('board?session='+$("#query").val());
+    $.getJSON('board?session='+$("#query").val(), function(data) {
+      console.log(data);
+      if(data != undefined && data != null){
+        var everything = "<ul>";
+        if(data.session != undefined && data.session != null) everything+="<li> Session: "+data.session+"</li>";
+        if(data.board.length>0) everything+="<li> Board: "+ data.board+"</li>";
+        if(data.turn != undefined && data.turn != null) everything+="<li> Turn: "+data.turn+"</li>";
+        if(data.player0 != undefined && data.player0 != null) everything+="<li> Player 1: "+data.player0+"</li>";
+        if(data.player1 != undefined && data.player1 != null) everything+="<li> Player 2: "+data.player1+"</li>";
+        if(data.updated != undefined && data.updated != null) everything+="<li> Updated: "+data.updated+"</li>";
+        everything += "</ul>";
+        $("#response").html(everything);
+      }
+      else $("#response").html("No Session");
+    })
+  });
+  $("#deleteButton").click(function(){
+    console.log('board?session='+$("#query").val());
+    var url="board?session="+$("#query").val();
+    $.ajax({
+        url: url,
+        type: "DELETE",
+        success: function(data,textStatus){
+            $("#done").html(textStatus);
+        }
+    })
+  })
+});
+
+
+
+</script>
+</head>
+
+<body>
+<form id="postForm" action="">
+<label for="session">Session: </label><input type="text" id="session" placeholder="Session ID"><br>
+<label for="column">Columnn: </label><input type="int" id="column" placeholder="Column"><br>
+<label for="player">Player: </label><input type="int" id="player" placeholder="Player"><br>
+</form>
+<button id="postButton">Post</button>
+<form id="getForm" action="">
+<label for="session">Session: </label><input type="text" id="query" placeholder="Session ID"><br>
+</form>
+<button id="getButton">Get</button>
+<button id="deleteButton">Delete</button>
+<div id="json"></div>
+<div id="done"></div>
+<div id="response"></div>
+</body>
+</html>
+

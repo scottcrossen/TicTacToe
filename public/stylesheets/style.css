@@ -1,0 +1,23 @@
+.navbar {
+  min-height: 5em;
+  text-align: center;
+}
+
+table {
+border: 2px solid black;
+background-color: cornflowerblue;
+}
+
+table {
+  empty-cells: show;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.circle {
+  padding: 2em 2.1em;
+  background: white;
+  border-radius: 90%;
+  margin: .2em;
+  width: 3%;
+}
