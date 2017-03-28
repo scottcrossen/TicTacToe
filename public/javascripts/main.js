@@ -22,6 +22,7 @@ function modalSubmit() {
   name = $('#name').val()
   gameID = $('#gameID').val()
   size=3
+  board=[[0,0,0],[0,0,0],[0,0,0]]
 
   if (name == '' || gameID == '') {
     $('#alert').html('<div class="alert alert-warning">Name and game ID cannot be left blank.</div>');
@@ -34,7 +35,7 @@ function modalSubmit() {
       "player1" : name,
       "size" : size,
       "turn": 1,
-      "board": [[0,0,0],[0,0,0],[0,0,0]]
+      "board": board
     }
     $.ajax({
       url: '/board',
@@ -120,16 +121,16 @@ function paintBoard(json) {
   console.log("Making Board");
   board = json.board
   turn = json.turn
-  /*for (var i = 0; i < board.length; i++) {
+  for (var i = 0; i < board.length; i++) {
     for (var j = 0; j < board[i].length; j++) {
       if (board[i][j] == 1) {
-        $('#' + (j+1).toString() + (i+1).toString() + ' .circle').css('background', 'red')
+        $('#' + (i+1).toString() + (j+1).toString()).text("X")
       }
       if (board[i][j] == 2) {
-        $('#' + (j+1).toString() + (i+1).toString() + ' .circle').css('background', 'black')
+        $('#' + (i+1).toString() + (j+1).toString()).text("O")
       }
     }
-  }*/
+  }
   $('#turn').text((turn==1? json.player1 : json.player2)+"\'s Turn");
   $('#prompt').text(((turn==player)? "It's your turn. Go ahead and move!":"It's not your turn. You're going to have to wait for the other player."));
   testFinish();
@@ -137,78 +138,33 @@ function paintBoard(json) {
 
 function runPage() {
   turn = 1
-  /*
-  $('.col1').click(function() {
-    if (turn == player && board[0].length < 6)
-    {
-      madeMove(0)
-    }
-    if (turn == player && board[0].length == 6)
-    {
-      $('#prompt').text('Column is full. Try a different column.')
-    }
+  $('#11').click(function(){
+    if(turn==player && board[0][0] == 0) madeMove(0,0)
   })
-  $('.col2').click(function() {
-    if (turn == player && board[1].length < 6)
-    {
-      madeMove(1)
-    }
-    if (turn == player && board[1].length == 6)
-    {
-      $('#prompt').text('Column is full. Try a different column.')
-    }
+  $('#12').click(function(){
+    if(turn==player && board[0][1] == 0) madeMove(0,1)
   })
-  $('.col3').click(function() {
-    if (turn == player && board[2].length < 6)
-    {
-      madeMove(2)
-    }
-    if (turn == player && board[2].length == 6)
-    {
-      $('#prompt').text('Column is full. Try a different column.')
-    }
+  $('#13').click(function(){
+    if(turn==player && board[0][2] == 0) madeMove(0,2)
   })
-  $('.col4').click(function() {
-    if (turn == player && board[3].length < 6)
-    {
-      madeMove(3)
-    }
-    if (turn == player && board[3].length == 6)
-    {
-      $('#prompt').text('Column is full. Try a different column.')
-    }
+  $('#21').click(function(){
+    if(turn==player && board[1][0] == 0) madeMove(1,0)
   })
-  $('.col5').click(function() {
-    if (turn == player && board[4].length < 6)
-    {
-      madeMove(4)
-    }
-    if (turn == player && board[4].length == 6)
-    {
-      $('#prompt').text('Column is full. Try a different column.')
-    }
+  $('#22').click(function(){
+    if(turn==player && board[1][1] == 0) madeMove(1,1)
   })
-  $('.col6').click(function() {
-    if (turn == player && board[5].length < 6)
-    {
-      madeMove(5)
-    }
-    if (turn == player && board[5].length == 6)
-    {
-      $('#prompt').text('Column is full. Try a different column.')
-    }
+  $('#23').click(function(){
+    if(turn==player && board[1][2] == 0) madeMove(1,2)
   })
-  $('.col7').click(function() {
-    if (turn == player && board[6].length < 6)
-    {
-      madeMove(6)
-    }
-    if (turn == player && board[6].length == 6)
-    {
-      $('#prompt').text('Column is full. Try a different column.')
-    }
+  $('#31').click(function(){
+    if(turn==player && board[2][0] == 0) madeMove(2,0)
   })
-  */
+  $('#32').click(function(){
+    if(turn==player && board[2][1] == 0) madeMove(2,1)
+  })
+  $('#33').click(function(){
+    if(turn==player && board[2][2] == 0) madeMove(2,2)
+  })
 }
 
 function madeMove(row, col){

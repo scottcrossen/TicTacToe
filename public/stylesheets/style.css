@@ -1,6 +1,9 @@
 .square{
     width:100px;
     height:100px;
+    text-align:center;
+    font-size: 75px;
+    color: #000;
 }
 
 .v{
@@ -16,3 +19,4 @@
 table {
     margin: 0 auto;
 }
+
