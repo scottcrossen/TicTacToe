@@ -6,6 +6,7 @@ mongoose.connect('mongodb://localhost/ConnectFourDB');
 var connectFourSchema = mongoose.Schema({ 
   session: {type: String, required: true},
   board: [],
+  size: {type: Number, min: 0, max: 9, default: 0},
   turn: {type: Number, min: 0, max: 2, default: 0}, 
   player1: {type: String, default: "Unknown"},
   player2: {type: String, default: "Unknown"},
@@ -34,18 +35,20 @@ router.get('/lose', function(req, res, next) {
   res.render('finish', { title: 'You Lose.' });
 });
 
-add_to_column=function(board, column, player){
-  if(board[column].length<6)
-    board[column].push(player);
+add_to_spot=function(board, row, column, player){
+  if(board[row][column]==0)
+    board[row][column]=player;
   return board;
 }
 
-check_format=function(body){
+check_format=function(body, size){
   var output ={};
-  if(body.board != undefined && body.board != null && typeof(body.board)==='object' && body.board.length==7){
+  output.size=size;
+  if(body.size != undefined && body.size != null && typeof(body.size) ==='number' && body.size >= 0, body.size <= 9) output.size=body.size;
+  if(body.board != undefined && body.board != null && typeof(body.board)==='object' && body.board.length==body.size && output.size != 0){
     var good_board=true;
-    for(var i=0; i<7; i++){
-      if(typeof(body.board[i]) != "object" || body.board[i].length==undefined || body.board[i].length == null || body.board[i].length>=7 || body.board[i].length<0){ good_board=false; break;}
+    for(var i=0; i<body.size; i++){
+      if(typeof(body.board[i]) != "object" || body.board[i].length==undefined || body.board[i].length == null || body.board[i].length != body.size){ good_board=false; break;}
       for(var j=0; j<body.board[i].length; j++){
         if(typeof(body.board[i][j]) != "number" || !(body.board[i][j] == 0 || body.board[i][j] == 1 || body.board[i][j] == 2)){good_board=false; break;}
       }
@@ -64,10 +67,10 @@ router.post('/board', function(req, res, next) {
   Board.findOne({'session': req.body.session}, function(error, foundsession) {
     if(foundsession && !error){
       var conditions = { session: req.body.session };
-      if(req.body.move != undefined && req.body.move != null && typeof(req.body.move) ==='object' && req.body.move.player != undefined && req.body.move.player != null && typeof(req.body.move.player) === 'number' && ((req.body.move.player === 1 && foundsession.turn===1) || (req.body.move.player === 2 && foundsession.turn===2)) && req.body.move.column != undefined && req.body.move.column != null && typeof(req.body.move.column) === 'number' && req.body.move.column>=0 && req.body.move.column<=7){
-        var update = { $set: { turn: ((req.body.move.player==1)? 2 : 1), board: add_to_column(foundsession.board, req.body.move.column, req.body.move.player)}};
+      if(req.body.move != undefined && req.body.move != null && typeof(req.body.move) ==='object' && req.body.move.player != undefined && req.body.move.player != null && typeof(req.body.move.player) === 'number' && ((req.body.move.player === 1 && foundsession.turn===1) || (req.body.move.player === 2 && foundsession.turn===2)) && req.body.move.row != undefined && req.body.move.row != null && typeof(req.body.move.row) === 'number' && req.body.move.row>=0 && req.body.move.row < foundsession.size && req.body.move.column != undefined && req.body.move.column != null && typeof(req.body.move.column) === 'number' && req.body.move.column>=0 && req.body.move.column < foundsession.size){
+        var update = { $set: { turn: ((req.body.move.player==1)? 2 : 1), board: add_to_spot(foundsession.board, req.body.move.row, req.body.move.column, req.body.move.player)}};
       } else {
-        var update = { $set: check_format(req.body)};
+        var update = { $set: check_format(req.body, foundsession.size)};
       }
       var options = { multi: true };
       Board.update(conditions, update, options, function(err,num){
@@ -75,10 +78,10 @@ router.post('/board', function(req, res, next) {
       });
       return;
     } else if(!foundsession) {
-      var newboard = new Board(check_format(req.body)); 
+      var newboard = new Board(check_format(req.body, 0)); 
       newboard.save(function(err, post) {
       if (err) return console.error(err);
-      return;
+        return;
       });
     } else {
       console.error(error);

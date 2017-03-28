@@ -29,8 +29,8 @@ $(document).ready(function(){
         if(data.session != undefined && data.session != null) everything+="<li> Session: "+data.session+"</li>";
         if(data.board.length>0) everything+="<li> Board: "+ data.board+"</li>";
         if(data.turn != undefined && data.turn != null) everything+="<li> Turn: "+data.turn+"</li>";
-        if(data.player0 != undefined && data.player0 != null) everything+="<li> Player 1: "+data.player0+"</li>";
-        if(data.player1 != undefined && data.player1 != null) everything+="<li> Player 2: "+data.player1+"</li>";
+        if(data.player1 != undefined && data.player1 != null) everything+="<li> Player 1: "+data.player1+"</li>";
+        if(data.player2 != undefined && data.player2 != null) everything+="<li> Player 2: "+data.player2+"</li>";
         if(data.updated != undefined && data.updated != null) everything+="<li> Updated: "+data.updated+"</li>";
         everything += "</ul>";
         $("#response").html(everything);

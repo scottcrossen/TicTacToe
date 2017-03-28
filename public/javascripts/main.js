@@ -31,8 +31,9 @@ function modalSubmit() {
     var data = {
       "session" : gameID,
       "player1" : name,
+      "size" : 3,
       "turn": 1,
-      "board": [[],[],[],[],[],[],[]]
+      "board": [[0,0,0],[0,0,0],[0,0,0]]
     }
     $.ajax({
       url: '/board',
@@ -118,7 +119,7 @@ function paintBoard(json) {
   console.log("Making Board");
   board = json.board
   turn = json.turn
-  for (var i = 0; i < board.length; i++) {
+  /*for (var i = 0; i < board.length; i++) {
     for (var j = 0; j < board[i].length; j++) {
       if (board[i][j] == 1) {
         $('#' + (j+1).toString() + (i+1).toString() + ' .circle').css('background', 'red')
@@ -127,8 +128,7 @@ function paintBoard(json) {
         $('#' + (j+1).toString() + (i+1).toString() + ' .circle').css('background', 'black')
       }
     }
-  }
-  //$('#turn').text("Player "+((turn+1)==1? "One":"Two")+"'s Turn");
+  }*/
   $('#turn').text((turn==1? json.player1 : json.player2)+"\'s Turn");
   $('#prompt').text(((turn==player)? "It's your turn. Go ahead and move!":"It's not your turn. You're going to have to wait for the other player."));
   testFinish();
@@ -217,11 +217,12 @@ function runPage() {
 
 function dropPiece(col) {}
 
-function madeMove(col) {
+function madeMove(row, col){
   var data = {
     "session" : gameID,
     "move" : {
       "player" : player,
+      "row" : row,
       "column" : col
     }
   }
