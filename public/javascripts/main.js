@@ -30,8 +30,8 @@ function modalSubmit() {
   if ($('#newGame').is(':checked')) {
     var data = {
       "session" : gameID,
-      "player0" : name,
-      "turn": 0,
+      "player1" : name,
+      "turn": 1,
       "board": [[],[],[],[],[],[],[]]
     }
     $.ajax({
@@ -46,7 +46,7 @@ function modalSubmit() {
         console.log("Game Created");
         console.log(res);
         $('#myModal').modal('toggle')
-        player = 0
+        player = 1
         closeModal();
       },
       failure: function() {
@@ -69,7 +69,7 @@ function modalSubmit() {
         else {
           var data = {
             "session" : gameID,
-            "player1" : name
+            "player2" : name
           }
           $.ajax({
             url: '/board',
@@ -83,7 +83,7 @@ function modalSubmit() {
               console.log("Game joined");
               console.log(res)
               $('#myModal').modal('hide')
-              player = 1
+              player = 2
               closeModal();
             },
             failure: function() {
@@ -120,22 +120,22 @@ function paintBoard(json) {
   turn = json.turn
   for (var i = 0; i < board.length; i++) {
     for (var j = 0; j < board[i].length; j++) {
-      if (board[i][j] == 0) {
+      if (board[i][j] == 1) {
         $('#' + (j+1).toString() + (i+1).toString() + ' .circle').css('background', 'red')
       }
-      if (board[i][j] == 1) {
+      if (board[i][j] == 2) {
         $('#' + (j+1).toString() + (i+1).toString() + ' .circle').css('background', 'black')
       }
     }
   }
   //$('#turn').text("Player "+((turn+1)==1? "One":"Two")+"'s Turn");
-  $('#turn').text(((turn+1)==1? json.player0 : json.player1)+"\'s Turn");
+  $('#turn').text((turn==1? json.player1 : json.player2)+"\'s Turn");
   $('#prompt').text(((turn==player)? "It's your turn. Go ahead and move!":"It's not your turn. You're going to have to wait for the other player."));
   testFinish();
 }
 
 function runPage() {
-  turn = 0
+  turn = 1
   $('.col1').click(function() {
     if (turn == player && board[0].length < 6)
     {
@@ -291,7 +291,7 @@ function testFinish(){
     return found_win;
     } else return false;
   }
-  for(var play=0; play<=1; play++){
+  for(var play=1; play<=2; play++){
     for (var i = 0; i < board.length; i++) {
       for (var j = 0; j < board[i].length; j++) {
         console.log("testing ("+i.toString()+","+j.toString()+")");

@@ -6,9 +6,9 @@ mongoose.connect('mongodb://localhost/ConnectFourDB');
 var connectFourSchema = mongoose.Schema({ 
   session: {type: String, required: true},
   board: [],
-  turn: {type: Number, min: 0, max: 2, default: 2}, 
-  player0: {type: String, default: "Unknown"},
+  turn: {type: Number, min: 0, max: 2, default: 0}, 
   player1: {type: String, default: "Unknown"},
+  player2: {type: String, default: "Unknown"},
   updated: {type: Date, default: Date.now}
 });
 var Board = mongoose.model('Board', connectFourSchema);
@@ -47,15 +47,15 @@ check_format=function(body){
     for(var i=0; i<7; i++){
       if(typeof(body.board[i]) != "object" || body.board[i].length==undefined || body.board[i].length == null || body.board[i].length>=7 || body.board[i].length<0){ good_board=false; break;}
       for(var j=0; j<body.board[i].length; j++){
-        if(typeof(body.board[i][j]) != "number" || !(body.board[i][j] == 1 || body.board[i][j] == 0)){good_board=false; break;}
+        if(typeof(body.board[i][j]) != "number" || !(body.board[i][j] == 0 || body.board[i][j] == 1 || body.board[i][j] == 2)){good_board=false; break;}
       }
     }
     if(good_board==true) output.board=body.board;
   }
-  if(body.turn != undefined && body.turn != null && typeof(body.turn)==='number' && (body.turn === 0 || body.turn===1)) output.turn=body.turn;
+  if(body.turn != undefined && body.turn != null && typeof(body.turn)==='number' && (body.turn === 1 || body.turn===2)) output.turn=body.turn;
   if(body.session != undefined && body.session != null && typeof(body.session)==='string' && body.session.length <25) output.session=body.session;
-  if(body.player0 != undefined && body.player0 != null && typeof(body.player0)==='string' && body.player0.length <25) output.player0=body.player0;
   if(body.player1 != undefined && body.player1 != null && typeof(body.player1)==='string' && body.player1.length <25) output.player1=body.player1;
+  if(body.player2 != undefined && body.player2 != null && typeof(body.player2)==='string' && body.player2.length <25) output.player2=body.player2;
   return output;
 }
 
@@ -64,8 +64,8 @@ router.post('/board', function(req, res, next) {
   Board.findOne({'session': req.body.session}, function(error, foundsession) {
     if(foundsession && !error){
       var conditions = { session: req.body.session };
-      if(req.body.move != undefined && req.body.move != null && typeof(req.body.move) ==='object' && req.body.move.player != undefined && req.body.move.player != null && typeof(req.body.move.player) === 'number' && ((req.body.move.player === 0 && foundsession.turn===0) || (req.body.move.player === 1 && foundsession.turn===1)) && req.body.move.column != undefined && req.body.move.column != null && typeof(req.body.move.column) === 'number' && req.body.move.column>=0 && req.body.move.column<=7){
-        var update = { $set: { turn: ((req.body.move.player==0)? 1 : 0), board: add_to_column(foundsession.board, req.body.move.column, req.body.move.player)}};
+      if(req.body.move != undefined && req.body.move != null && typeof(req.body.move) ==='object' && req.body.move.player != undefined && req.body.move.player != null && typeof(req.body.move.player) === 'number' && ((req.body.move.player === 1 && foundsession.turn===1) || (req.body.move.player === 2 && foundsession.turn===2)) && req.body.move.column != undefined && req.body.move.column != null && typeof(req.body.move.column) === 'number' && req.body.move.column>=0 && req.body.move.column<=7){
+        var update = { $set: { turn: ((req.body.move.player==1)? 2 : 1), board: add_to_column(foundsession.board, req.body.move.column, req.body.move.player)}};
       } else {
         var update = { $set: check_format(req.body)};
       }

@@ -6,7 +6,7 @@
 <script>
 $(document).ready(function(){
   $("#postButton").click(function(){
-      var myobj = {session:$("#session").val(),move: {column:parseInt($("#column").val()), player:parseInt($("#player").val())}};
+      var myobj = {session: $("#session").val(),move: {row: parseInt($("#row").val()), column: parseInt($("#column").val()), player: parseInt($("#player").val())}};
       jobj = JSON.stringify(myobj);
       $("#json").text(jobj);
       var url = "board";
@@ -49,6 +49,7 @@ $(document).ready(function(){
         }
     })
   })
+  
 });
 
 
@@ -60,6 +61,7 @@ $(document).ready(function(){
 <form id="postForm" action="">
 <label for="session">Session: </label><input type="text" id="session" placeholder="Session ID"><br>
 <label for="column">Columnn: </label><input type="int" id="column" placeholder="Column"><br>
+<label for="row">Row: </label><input type="int" id="row" placeholder="Row"><br>
 <label for="player">Player: </label><input type="int" id="player" placeholder="Player"><br>
 </form>
 <button id="postButton">Post</button>
