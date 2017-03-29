@@ -147,10 +147,10 @@ function paintBoard(json) {
   for (var i = 0; i < board.length; i++) {
     for (var j = 0; j < board[i].length; j++) {
       if (board[i][j] == 1) {
-        $('#' + (i+1).toString() + (j+1).toString()).css('color','#7CFC00').text("X")
+        $('#' + (i+1).toString() + (j+1).toString()).css('color','green').text("X")
       }
       if (board[i][j] == 2) {
-        $('#' + (i+1).toString() + (j+1).toString()).css('color','#FF0000').text("O")
+        $('#' + (i+1).toString() + (j+1).toString()).css('color','red').text("O")
       }
     }
   }

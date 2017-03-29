@@ -20,3 +20,11 @@ table {
     margin: 0 auto;
 }
 
+.jumbotron {
+    height: 250px;
+    background-repeat: no-repeat; 
+    background-size: 100% auto;
+    background-position: 0% 50%; 
+    background-image: url("/background.jpg");
+    min-width: 300px;
+}
