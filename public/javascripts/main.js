@@ -147,10 +147,10 @@ function paintBoard(json) {
   for (var i = 0; i < board.length; i++) {
     for (var j = 0; j < board[i].length; j++) {
       if (board[i][j] == 1) {
-        $('#' + (i+1).toString() + (j+1).toString()).text("X")
+        $('#' + (i+1).toString() + (j+1).toString()).css('color','#7CFC00').text("X")
       }
       if (board[i][j] == 2) {
-        $('#' + (i+1).toString() + (j+1).toString()).text("O")
+        $('#' + (i+1).toString() + (j+1).toString()).css('color','#FF0000').text("O")
       }
     }
   }
@@ -166,6 +166,13 @@ function runPage() {
     xcoord=parseInt($(this).attr('id').substring(1,2))-1
     if(turn==player && board[ycoord][xcoord] == 0) madeMove(ycoord,xcoord)
   })
+  $(window).resize(function(){
+    $('.square').each(function() {
+      $(this).height($(this).width());
+      $(this).css('font-size',$(this).width()*.7);
+    });
+    $('#board').css('min-width',size*100)
+  }).resize();
 }
 
 function madeMove(row, col){
