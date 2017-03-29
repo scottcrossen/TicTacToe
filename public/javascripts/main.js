@@ -16,20 +16,39 @@ function doModal() {
 function closeModal(){
   setInterval(getBoard, 3000)
   runPage()
+  board=buildBoard(size)
+}
+
+function buildBoard(size){
+  output=[]
+  $('#board').append($('<table>'))
+  for(var i=1; i<=size; i++){
+    $('#board table').append($('<tr>').attr('id',"row"+i.toString()))
+    output.push([])
+    for(var j=1; j<=size; j++){
+      $('#board table #row'+i.toString()).append($('<td>').attr('id',i.toString()+j.toString()).addClass('square'))
+      if(i != 1 && i != size) $('#'+i.toString()+j.toString()).addClass('h')
+      if(j != 1 && j != size) $('#'+i.toString()+j.toString()).addClass('v')
+      output[i-1].push(0)
+    }
+  }
+  return output
 }
 
 function modalSubmit() {
   name = $('#name').val()
   gameID = $('#gameID').val()
-  size=3
-  board=[[0,0,0],[0,0,0],[0,0,0]]
-
   if (name == '' || gameID == '') {
     $('#alert').html('<div class="alert alert-warning">Name and game ID cannot be left blank.</div>');
     return
   }
-
+  size=$('#size').val()
   if ($('#newGame').is(':checked')) {
+    if(size == null || size == undefined || size <=0 || size>9){ 
+      $('#alert').html('<div class="alert alert-warning">Size cannot be left blank and must be less than 9.</div>');
+      return
+    }
+    board=buildBoard(size)
     var data = {
       "session" : gameID,
       "player1" : name,
@@ -50,7 +69,8 @@ function modalSubmit() {
         console.log(res);
         $('#myModal').modal('toggle')
         player = 1
-        closeModal();
+        setInterval(getBoard, 3000)
+        runPage()
       },
       failure: function() {
         console.log('Server error. Try again')
@@ -87,7 +107,10 @@ function modalSubmit() {
               console.log(res)
               $('#myModal').modal('hide')
               player = 2
-              closeModal();
+              size=res.size
+              setInterval(getBoard, 3000)
+              board=buildBoard(size)
+              runPage()
             },
             failure: function() {
               console.log('Server error. Try again');
@@ -124,10 +147,10 @@ function paintBoard(json) {
   for (var i = 0; i < board.length; i++) {
     for (var j = 0; j < board[i].length; j++) {
       if (board[i][j] == 1) {
-        $('#' + (i+1).toString() + (j+1).toString()).text("X")
+        $('#' + (i+1).toString() + (j+1).toString()).css('color','green').text("X")
       }
       if (board[i][j] == 2) {
-        $('#' + (i+1).toString() + (j+1).toString()).text("O")
+        $('#' + (i+1).toString() + (j+1).toString()).css('color','red').text("O")
       }
     }
   }
@@ -138,33 +161,18 @@ function paintBoard(json) {
 
 function runPage() {
   turn = 1
-  $('#11').click(function(){
-    if(turn==player && board[0][0] == 0) madeMove(0,0)
+  $('.square').click(function(){
+    ycoord=parseInt($(this).attr('id').substring(0,1))-1
+    xcoord=parseInt($(this).attr('id').substring(1,2))-1
+    if(turn==player && board[ycoord][xcoord] == 0) madeMove(ycoord,xcoord)
   })
-  $('#12').click(function(){
-    if(turn==player && board[0][1] == 0) madeMove(0,1)
-  })
-  $('#13').click(function(){
-    if(turn==player && board[0][2] == 0) madeMove(0,2)
-  })
-  $('#21').click(function(){
-    if(turn==player && board[1][0] == 0) madeMove(1,0)
-  })
-  $('#22').click(function(){
-    if(turn==player && board[1][1] == 0) madeMove(1,1)
-  })
-  $('#23').click(function(){
-    if(turn==player && board[1][2] == 0) madeMove(1,2)
-  })
-  $('#31').click(function(){
-    if(turn==player && board[2][0] == 0) madeMove(2,0)
-  })
-  $('#32').click(function(){
-    if(turn==player && board[2][1] == 0) madeMove(2,1)
-  })
-  $('#33').click(function(){
-    if(turn==player && board[2][2] == 0) madeMove(2,2)
-  })
+  $(window).resize(function(){
+    $('.square').each(function() {
+      $(this).height($(this).width());
+      $(this).css('font-size',$(this).width()*.7);
+    });
+    $('#board').css('min-width',size*100)
+  }).resize();
 }
 
 function madeMove(row, col){

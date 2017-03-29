@@ -13,12 +13,13 @@
 <body>
 
 <div class="jumbotron">
-  <div class="container">
+ <!--<div class="container">
     <h1 align="center"><font color="steelblue">Tic-Tac-Toe</font></h1>
-  </div>
+  </div>-->
 </div>
 
 <div id="board">
+<!--
     <table>
       <tr id="row1">
         <td id='11' class="square"></td>
@@ -36,6 +37,7 @@
         <td id='33' class="square"></td>
       </tr>
     </table>
+-->
   </div>
 
 <h1 id="turn" style="text-align:center;">Starting Game...</h1>
@@ -53,6 +55,8 @@
         <form>
           <input type="radio" name="game" id="newGame" checked> Create a new game</br>
           <input type="radio" name="game" id="joinGame"> Join existing game</br></br>
+          <p>Input the size of the game board</p>
+          <input type="number" id="size"><br><br>
           <p>Input existing game ID or enter a new game ID:</p>
           <input type="text" id="gameID">
         </form></br>
