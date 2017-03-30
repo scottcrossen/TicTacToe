@@ -44,8 +44,8 @@ function modalSubmit() {
   }
   size=$('#size').val()
   if ($('#newGame').is(':checked')) {
-    if(size == null || size == undefined || size <=0 || size>9){ 
-      $('#alert').html('<div class="alert alert-warning">Size cannot be left blank and must be less than 9.</div>');
+    if(size == null || size == undefined || size <=2 || size>9){ 
+      $('#alert').html('<div class="alert alert-warning">Size cannot be less than 2 or more than 9.</div>');
       return
     }
     board=buildBoard(size)
