@@ -184,6 +184,7 @@ function madeMove(row, col){
       "column" : col
     }
   }
+  if(testTie()==1) tie();
   $.ajax({
     url: '/board',
     method: 'POST',
@@ -199,6 +200,18 @@ function madeMove(row, col){
       console.log('server error. Try again');
     }
   })
+}
+
+function testTie(){
+  var tie_game=0;
+  for (var i=0; i<size; i++){
+    for (var j=0; j<size; j++){
+      if(board[i][j] == 0){
+        tie_game++;
+      }
+    }
+  }
+  return tie_game;
 }
 
 function testFinish(){
@@ -259,6 +272,10 @@ function testFinish(){
       }
     }
   }
+  if(testTie()==0){
+    endGame();
+    tie();
+  }
 }
 function endGame(){
   var url="board?session="+gameID;
@@ -277,4 +294,7 @@ function win(){
 function lose(){
   endGame();
   window.location="/lose";
+}
+function tie(){
+  window.location="/tie";
 }

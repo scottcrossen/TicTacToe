@@ -35,6 +35,10 @@ router.get('/lose', function(req, res, next) {
   res.render('finish', { title: 'You Lose.' });
 });
 
+router.get('/tie', function(req,res,next) {
+  res.render('finish',{ title: 'Tie Game.'});
+});
+
 add_to_spot=function(board, row, column, player){
   if(board[row][column]==0)
     board[row][column]=player;
